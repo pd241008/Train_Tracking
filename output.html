@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Train Tracker - Output</title>
+    <!-- Add Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #map {
+            width: 80%;
+            height: 400px;
+            margin-top: 20px;
+        }
+
+        .output-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        p {
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Train Tracker - Output</h1>
+
+    <!-- Map container -->
+    <div id="map"></div>
+
+    <div class="output-container">
+        <!-- Output content will be dynamically added here -->
+    </div>
+
+    <!-- Add Leaflet library -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+        // Retrieve URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const trainId = urlParams.get('trainId');
+        const newLocation = urlParams.get('newLocation');
+        const date = urlParams.get('date');
+        const pnr = urlParams.get('pnr');
+
+        // Display the received data in the output container
+        const outputContainer = document.querySelector('.output-container');
+        const outputContent = `
+            <p>Train ID: ${trainId}</p>
+            <p>New Location: ${newLocation}</p>
+            <p>Date: ${date}</p>
+            <p>PNR Number: ${pnr}</p>
+        `;
+        outputContainer.innerHTML = outputContent;
+
+        // Leaflet map setup
+        const map = L.map('map').setView([20.5937, 78.9629], 5); // Set the initial map view for India
+
+        // Add OpenStreetMap tile layer for India
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Set the train's location dynamically based on some data (replace this with actual data)
+        const trainLocationData = getTrainLocationData(); // Implement this function to get the train location data
+
+        // Check if train location data is available
+        if (trainLocationData && trainLocationData.latitude && trainLocationData.longitude) {
+            const trainLocation = [trainLocationData.latitude, trainLocationData.longitude];
+            
+            // Add a marker to the map based on the train's location
+            L.marker(trainLocation).addTo(map)
+                .bindPopup(`Train ${trainId} is currently at ${newLocation}`).openPopup();
+        }
+
+        // Function to get the train location data (replace this with actual data retrieval logic)
+        function getTrainLocationData() {
+            // Replace this with actual data retrieval logic (API call, database query, etc.)
+            // Return an object with latitude and longitude properties
+            return {
+                latitude: 19.021111, // Example latitude
+                longitude: 72.513409, // Example longitude
+            };
+        }
+    </script>
+</body>
+</html>
